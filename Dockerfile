@@ -1,28 +1,28 @@
-# Use the official Ubuntu base image
 FROM ubuntu:20.04
 
-# Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies for Kubernetes and Docker
-RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y apt-transport-https ca-certificates curl software-properties-common \
-    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \
-    && echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list \
-    && apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io \
-    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - \
-    && echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list \
-    && apt-get update && apt-get install -y kubelet kubeadm kubectl kubernetes-cni \
-    && apt-mark hold kubelet kubeadm kubectl
+# Install basic tools
+RUN apt-get update && apt-get install -y \
+    curl apt-transport-https ca-certificates gnupg lsb-release \
+    docker.io git sudo
 
-# Install Docker Compose
-RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
-    && chmod +x /usr/local/bin/docker-compose
+# Install Go (needed for kind sometimes)
+RUN curl -OL https://golang.org/dl/go1.20.5.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz && \
+    ln -s /usr/local/go/bin/go /usr/bin/go && \
+    rm go1.20.5.linux-amd64.tar.gz
 
-# Expose port for Kubernetes API server (default is 8080)
-EXPOSE 8080
+# Install kind
+RUN curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64 && \
+    chmod +x /usr/local/bin/kind
 
-# Run a Kubernetes setup script (k8s-setup.sh) when the container starts
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
+
+# Copy setup script
 COPY k8s-setup.sh /usr/local/bin/k8s-setup.sh
 RUN chmod +x /usr/local/bin/k8s-setup.sh
 

@@ -38,9 +38,4 @@
 
 Your Kubernetes cluster should now be up and running inside the Docker container.
 
-```
-
 ---
-
-These are the files you need, with the content provided. You can now create and push them to your GitHub repository. Let me know if you need any further help!
-```

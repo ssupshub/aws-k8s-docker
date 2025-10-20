@@ -1,41 +1,46 @@
 
-# Setting up Ubuntu EC2 on AWS
+# Running Kubernetes in Docker on Ubuntu EC2 (AWS)
 
-1. **Launch an EC2 Instance:**
-   - Go to AWS EC2 dashboard and launch a new EC2 instance.
-   - Choose an Ubuntu-based AMI (e.g., `ubuntu-20.04`).
-   - Select instance type (t2.micro should be sufficient for testing).
-   - Configure security group to allow SSH (port 22) and any ports Kubernetes needs (default 6443 for Kubernetes API).
+## 1. Launch Ubuntu EC2
 
-2. **Connect to EC2 Instance via SSH:**
-   ```bash
-   ssh -i your-key.pem ubuntu@<EC2_PUBLIC_IP>
-   ```
+- Use Ubuntu 20.04 or later AMI
+- t3.medium recommended for memory
+- Open ports: 22 (SSH), optionally 6443 (K8s API), 30000-32767 (NodePort)
 
-3. **Install Docker and Docker Compose:**
+## 2. SSH into instance
 
-   * Ensure that Docker and Docker Compose are installed. If not, you can install them with the following:
+```bash
+ssh -i your-key.pem ubuntu@your-ec2-ip
+````
 
-   ```bash
-   sudo apt-get update
-   sudo apt-get install -y docker.io
-   sudo apt-get install -y docker-compose
-   ```
+## 3. Install Docker
 
-4. **Clone the repository and build the Docker image:**
+```bash
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo usermod -aG docker $USER
+newgrp docker
+```
 
-   ```bash
-   git clone https://github.com/your-username/ubuntu-aws-k8s-docker.git
-   cd ubuntu-aws-k8s-docker
-   docker build -t ubuntu-k8s-docker .
-   ```
+## 4. Clone and build the container
 
-5. **Run the container:**
+```bash
+git clone https://github.com/your-username/ubuntu-aws-k8s-docker.git
+cd ubuntu-aws-k8s-docker
+docker build -t kind-k8s .
+```
 
-   ```bash
-   docker run -d --name=k8s-container ubuntu-k8s-docker
-   ```
+## 5. Run the container with Docker-in-Docker enabled
 
-Your Kubernetes cluster should now be up and running inside the Docker container.
+```bash
+docker run --privileged --name=k8s-container -it kind-k8s
+```
 
+## 6. Access the Kubernetes cluster
+
+Inside the container:
+
+```bash
+kubectl get nodes
+```
 ---

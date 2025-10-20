@@ -1,6 +1,6 @@
 # Kubernetes in Docker on Ubuntu EC2 (AWS)
 
-This project sets up a lightweight Kubernetes cluster using [kind (Kubernetes)](https://kind.sigs.k8s.io/) in Docker inside a Docker container, running on an Ubuntu EC2 instance in AWS.
+This project sets up a lightweight Kubernetes cluster using [kind (Kubernetes) in Docker](https://kind.sigs.k8s.io/) inside a Docker container, running on an Ubuntu EC2 instance in AWS.
 
 ## Why use kind?
 - Designed to run Kubernetes in Docker containers

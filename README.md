@@ -1,18 +1,17 @@
-# Ubuntu AWS with Kubernetes in Docker
+# Kubernetes in Docker on Ubuntu EC2 (AWS)
 
-This repository demonstrates how to set up Kubernetes inside a Docker container running on an Ubuntu instance hosted on AWS.
+This project sets up a lightweight Kubernetes cluster using [kind (Kubernetes IN Docker)](https://kind.sigs.k8s.io/) inside a Docker container, running on an Ubuntu EC2 instance in AWS.
 
-## Steps to Run
+## Why use kind?
+- Designed to run Kubernetes in Docker containers
+- Easy to test K8s workloads without full cluster setup
+- Supported by Kubernetes community
 
-1. Launch an Ubuntu EC2 instance on AWS.
-2. SSH into the instance.
-3. Clone this repository.
-4. Build the Docker image using the provided `Dockerfile`.
-5. Run the Kubernetes cluster inside Docker.
+## Steps
 
-## Prerequisites
-
-- AWS EC2 instance with Ubuntu
-- Docker installed on the Ubuntu instance
-- Kubernetes installed within the Docker container
+1. Launch Ubuntu EC2 instance on AWS
+2. SSH into the instance
+3. Install Docker and clone this repo
+4. Build and run the container
+5. Access the Kubernetes cluster using `kubectl`
 
